@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  paperless-scanner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: paperless-scanner:latest
+    container_name: paperless-scanner
+    restart: "no"
+
+    env_file:
+      - .env
+
+    # Network mode: host allows direct access to network scanners
+    # Use this if your scanner is on the local network
+    network_mode: host
+
+    # Volume for saving scans locally (optional)
+    volumes:
+      - ./scans:/scans
+
+    # Override the default command
+    # Examples:
+    # - Scan and upload to Paperless
+    command: ["--upload-to-paperless", "-verbose"]
+
+    # - Save to local volume
+    # command: ["-output", "/scans/scan.pdf"]
+
+    # - Scan, save locally, and upload
+    # command: ["-output", "/scans/scan.pdf", "--upload-to-paperless"]
